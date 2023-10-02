@@ -67,6 +67,20 @@ fi
 # If need for set wallpaper in hypr!!
 #yay -S --noconfirm waypaper-git
 
+# Astronvim
+sudo pacman -S --noconfirm neovim
+git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+nvim
+
 # Fazer um ajuste em que pega os dotfiles do github e coloque nas pastas devidas, verificando a criação de cada uma.
+read -n1 -rep "Would you like to configure from MateusFauri/Dotfiles on github? (y,n)" CONF
+if [[ $CONF == "Y" || $CONF == "y" ]]; then
+    git clone https://github.com/MateusFauri/Dotfiles.git
+    mv Dotfiles/* ~/.config/
+    rm -rf Dotfiles
+    cd ~/.config
+    rm LICENSE README.md arch_config.sh
+    cd ..
+fi
 
 echo -e "Fim da instalação!! \n"
