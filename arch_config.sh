@@ -7,19 +7,25 @@ sudo pacman -S --noconfirm pipewire pipewire-pulse
 sleep 3
 
 # Necessarios
-sudo pacman -S --noconfirm  libreoffice-still kitty wofi swaybg light mesa vulkan-radeon amd-ucode nerd-fonts firefox gufw ffmpeg gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer fwupd xclip thundar dunst
+sudo pacman -S --noconfirm  libreoffice-still kitty wofi swaybg mesa vulkan-radeon amd-ucode nerd-fonts firefox gufw ffmpeg gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer fwupd xclip dunst swayidle brightnessctl
 
 # utilitarios
-sudo pacman -S --noconfirm discord code neofetch flameshot dolphin pavucontrol playerctl pamixer steam flatpak packagekit-qt5
+sudo pacman -S --noconfirm discord code neofetch flameshot dolphin pavucontrol playerctl pamixer steam flatpak packagekit-qt5 ncdu calcurse deepin-calculator dnsutils net-tools
+  
 
 # nerdfontes
 read -n1 -rep 'Would you like to install nerd-fonts? (y,n)' NFS
 if [[ $NFS == "Y" || $NFS == "y" ]]; then
     sudo pacman -S nerd-fonts  #como fazer ele aceitar todos os pacotes automaticamente??
-fi
 
-# proton
-yay -S --noconfirm proton-ge-custom-bin
+    # Astronvim
+    sudo pacman -S --noconfirm neovim npm nodejs
+    mv ~/.config/nvim ~/.config/nvim.bak
+    mv ~/.local/share/nvim ~/.local/share/nvim.bak
+    mv ~/.local/state/nvim ~/.local/state/nvim.bak
+    mv ~/.cache/nvim ~/.cache/nvim.bak
+    git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+fi
 
 # Start the bluetooth service
 echo -e "Starting the Bluetooth Service...\n"
@@ -27,6 +33,9 @@ echo -e "Starting the Bluetooth Service...\n"
 # Bluetooth
 sudo pacman -S --noconfirm blueman sbc libldac hidapi
 sudo systemctl enable --now bluetooth.service
+
+# Docker 
+sudo pacman -S --noconfirm docker docker-compose
 
 # Yay
 ISYAY=/sbin/yay
@@ -42,6 +51,25 @@ else
     
     sudo pacman -Syu --noconfirm
     yay -Y --gendb
+
+    # proton
+    yay -S --noconfirm proton-ge-custom-bin
+    
+    # If need for set wallpaper in hypr!!
+    #yay -S --noconfirm waypaper-git
+fi
+
+# Change the network manager
+read -n1 -rep 'Would you like change the network manager to connman? (y,n)' NET
+if [[ $NET == "Y" || $NET == "y" ]]; then
+    sudo systemctl stop NetworkManager.service && sudo systemctl disable NetworkManager.service
+
+    sudo pacman -S --noconfirm connman
+    sudo systemctl enable connman.service && sudo systemctl start --now connman.service
+    if [ -f "$ISYAY" ]; then 
+        yay -Suy --noconfirm
+        yay -S --noconfirm cmst
+    if
 fi
 
 # Zsh
@@ -63,14 +91,6 @@ if [[ $ANC == "Y" || $ANC == "y" ]]; then
     conda config --set auto_activate_base false
     rm Anaconda-latest-Linux-x86_64.sh
 fi
-
-# If need for set wallpaper in hypr!!
-#yay -S --noconfirm waypaper-git
-
-# Astronvim
-sudo pacman -S --noconfirm neovim
-git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim
-nvim
 
 # Fazer um ajuste em que pega os dotfiles do github e coloque nas pastas devidas, verificando a criação de cada uma.
 read -n1 -rep "Would you like to configure from MateusFauri/Dotfiles on github? (y,n)" CONF

@@ -43,3 +43,8 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
+
+
+
+
+export QT_QPA_PLATFORMTHEME=qt5ct
