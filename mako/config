@@ -1,33 +1,30 @@
-background-color=#24273a
-text-color=#cad3f5
-width=320
-height=110
+sort=-time
+layer=overlay
+text-color=#e0e0e0FF
+text-alignment=center
+background-color=#202020E6
+width=300
+height=100
 padding=8
-margin=6,12,6
-border-size=2
-border-color=#8aadf4
-border-radius=12
-progress-color=over #363a4f
-icon-path=/usr/share/icons/breeze-dark
+border-size=0
+border-radius=8
+icons=1
+icon-path=/usr/share/icons/Papirus-Dark
+max-icon-size=64
 default-timeout=5000
-font=Overpass Mono 11
+ignore-timeout=1
+font=JetBrainsMono Nerd Font 10
 
-# Only for desktop, ignored when no such output exists
-#output=DP-1
+[urgency=low]
+background-color=#202020E6
+
+[urgency=normal]
+background-color=#2980B9E6
 
 [urgency=high]
-layer=overlay
-text-color=#f5a97f
-border-color=#f5a97f
+background-color=#BF616AE6
 default-timeout=0
-ignore-timeout=1
 
-[category=volume]
-layer=overlay
-format= <b>%s</b>\n%b
-group-by=category
-
-[category=brightness]
-layer=overlay
-format= <b>%s</b>\n%b
+[category=mpd]
+default-timeout=2000
 group-by=category
