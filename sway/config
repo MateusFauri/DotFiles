@@ -1,14 +1,14 @@
 # Variables
 
 # Display
-output DP-1 resolution 1920x1080@144.001Hz
-output HDMI-A-1 resolution 2560×1080@70.00Hz 
+output eDP-1 pos 0 0 resolution 1366x768@60.003Hz
+output HDMI-A-1 pos 1366 0 resolution 2560x1080@74.991Hz
 
 # Modifier
 set $mod Mod4
 
 # Terminal emulator
-set $term kitty
+set $term env KITTY_ENABLE_WAYLAND=1 kitty
 
 # Colors
 set $bg_color_dark #101010E6
@@ -43,13 +43,14 @@ set $cl_urge #00ff99
 
 # titlebar_padding 16 6
 title_align center
-default_border pixel 5
 smart_borders on
+default_border pixel 1
+default_floating_border pixel 1
+gaps outer 2
 gaps inner 5
-gaps outer 5
 ## Window decoration
 # class                 border  backgr. text    indicator child_border
-client.focused          #33ccff #595959 #eceff4 #00ff99   #00ff99
+client.focused          #33ccff #595959 #eceff4 #33ccff   #33ccff
 client.focused_inactive #33ccff #595959 #d8dee9 #000000   #000000
 client.unfocused        #33ccff #595959 #d8dee9 #000000   #000000
 client.urgent           #33ccff #595959 #2e3440 #8fbcbb   #ebcb8b
@@ -68,17 +69,6 @@ bar {
 # Wallpaper
 output "*" bg ~/.config/sway/wallpaper.png fill
 
-
-# Gtk Settings workaround
-exec_always {
-    gsettings set org.gnome.desktop.interface gtk-theme "Nordic"
-    gsettings set org.gnome.desktop.interface icon-theme "McMojave-circle"
-    gsettings set org.gnome.desktop.interface font-name "JetBrainsMono Nerd Font 10"
-    gsettings set org.gnome.desktop.interface cursor-theme-name "Material-dark"
-    gsettings set org.gnome.desktop.interface cursor-theme-size "16"
-}
-
-
 # Mouse
 input type:touchpad {
     tap enabled
@@ -96,14 +86,29 @@ input * {
 input <identifier> xkb_model "pc105"
 
 
+# Apply gtk theming
+exec_always ~/.config/sway/scripts/import-gsettings
+
+exec_always {
+    gsettings set org.gnome.desktop.interface gtk-theme "Otto"
+    gsettings set org.gnome.desktop.interface icon-theme "McMojave-circle-grey-dark"
+    gsettings set org.gnome.desktop.interface cursor-theme "material_dark_cursors"
+    gsettings set org.gnome.desktop.interface font-name "JetBrainsMono Nerd Font 10"
+    gsettings set org.gnome.desktop.interface monospace-font-name "JetBrainsMono Nerd Font 10"
+
+    gsettings set org.gnome.desktop.input-sources show-all-sources true
+    gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+    # kvantummanager --set "$kvantum-theme"
+}
+
 # Autostart apps
-exec --no-startup-id dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec autotiling 
+exec lxpolkit
+exec --no-startup-id 'nm-applet -i'
+# exec --no-startup-id dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 exec --no-startup-id mako
-# exec --no-startup-id eww daemon
-# exec --no-startup-id XDG_CURRENT_DESKTOP=Unity pasystray
 exec --no-startup-id XDG_CURRENT_DESKTOP=Unity  nm-applet --indicator
 exec --no-startup-id XDG_CURRENT_DESKTOP=Unity blueman-applet
-# exec --no-startup-id wl-paste -t text --watch clipman store --no-persist
 exec swayidle -w \
     timeout 900 'gtklock' \
     timeout 60 'pgrep -x gtklock && swaymsg "output * dpms off"' \
@@ -112,6 +117,24 @@ exec swayidle -w \
     resume 'swaymsg "output * dpms on"' \
     before-sleep 'playerctl pause' \
     before-sleep 'gtklock'
+# exec --no-startup-id eww daemon
+# exec --no-startup-id XDG_CURRENT_DESKTOP=Unity pasystray
+
+include /etc/sway/config.d/*
+input type:touchpad {
+    tap enabled
+    natural_scroll enable
+}
+
+input * {
+    left_handed disabled
+    tap enabled
+    natural_scroll disabled
+    dwt enabled
+    accel_profile "flat" # disable mouse acceleration (enabled by default; to set it manually, use "adaptive" instead of "flat")
+    pointer_accel 1 # set mouse sensitivity (between -1 and 1)
+}
+
 
 
 # Keybindings
@@ -119,20 +142,21 @@ exec swayidle -w \
 # General
 # bindsym $mod+shift+x exec gtklock
 bindsym $mod+shift+m exec 'bash ~/.config/rofi/leave/leave.sh'
+bindsym $mod+shift+l exec swaylock
 bindsym $mod+c kill
 bindsym $mod+s exec grim -g "$(slurp)" ~/Pictures/Screenshots/"screenshot-`date +%F-%T`".png
-bindsym $mod+d exec dolphin
+bindsym $mod+d exec thunar
 bindsym $mod+q exec $term
 bindsym $mod+f exec firefox
 bindsym $mod+Space exec '! pgrep -x wofi && wofi'
 # Commonly used apps
-bindsym $mod+h split h
-bindsym $mod+v split v
+bindsym $mod+Shift+h split h
+bindsym $mod+Shift+v split v
 bindsym $mod+shift+f fullscreen toggle
 bindsym $mod+t layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+v floating toggle
 bindsym $mod+a focus parent
 bindsym $mod+Shift+a focus child
 bindsym $mod+Shift+c reload
@@ -142,9 +166,13 @@ bindsym $mod+r mode "resize"
 workspace_layout default
 
 # Keyboard
-bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/sway/scripts/volume.sh inc
-bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/sway/scripts/volume.sh dec
-bindsym XF86AudioMute exec --no-startup-id ~/.config/sway/scripts/volume.sh mute
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+#bindsym XF86AudioRaiseVolume exec --no-startup-id ~/.config/sway/scripts/volume.sh inc
+#bindsym XF86AudioLowerVolume exec --no-startup-id ~/.config/sway/scripts/volume.sh dec
+#bindsym XF86AudioMute exec --no-startup-id ~/.config/sway/scripts/volume.sh mute
 bindsym XF86_MonBrightnessUp exec --no-startup-id ~/.config/sway/scripts/brightness.sh -A
 bindsym XF86_MonBrightnessDown exec --no-startup-id ~/.config/sway/scripts/brightness.sh -U
 
@@ -158,7 +186,7 @@ bindsym $mod+6 workspace number $ws6
 bindsym $mod+7 workspace number $ws7
 bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+bindsym $mod+0 workspace number $ws1w
 
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -172,67 +200,36 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# Move focused workspace between monitors
-bindsym $mod+Ctrl+Right move workspace to output right
-bindsym $mod+Ctrl+Left move workspace to output left
-
-# Change focus
+# Move your focus around
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-# Move focused window
+    # Move the focused window with the same, but add Shift
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
+# Move focused workspace between monitors
+#bindsym $mod+Ctrl+Right move workspace to output right
+#bindsym $mod+Ctrl+Left move workspace to output left
+
 mode "resize" {
-    # These bindings trigger as soon as you enter the resize mode
-
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
-    bindsym Left resize shrink width 5 px or 5 ppt
-    bindsym Down resize grow height 5 px or 5 ppt
-    bindsym Up resize shrink height 5 px or 5 ppt
-    bindsym Right resize grow width 5 px or 5 ppt
-
+    # These bindings trigger  shrink width 5 px or 5 ppt
+    # bindsym Down resize grow height 5 px or 5 ppt
+    # bindsym Up resize shrink height 5 px or 5 ppt
+    # bindsym Right resize grow width 5 px or 5 ppt
+    bindsym Left resize shrink width 25px
+    bindsym Down resize grow height 25px
+    bindsym Up resize shrink height 25px
+    bindsym Right resize grow width 25px
     # Back to normal: Enter or Escape or $mod+r
     bindsym Return mode "default"
     bindsym Escape mode "default"
     bindsym $mod+r mode "default"
 }
-
-
-# Assign workspaces to specific monitors
-workspace $ws1  output DP-4 DP-7 eDP-1
-workspace $ws2  output DP-4 DP-7 eDP-1
-workspace $ws3  output DP-7 DP-4 eDP-1
-workspace $ws4  output DP-4 DP-7 eDP-1
-workspace $ws5  output DP-7 DP-4 eDP-1
-workspace $ws6  output DP-4 DP-7 eDP-1
-workspace $ws7  output DP-4 DP-7 eDP-1
-workspace $ws8  output DP-7 DP-4 eDP-1
-workspace $ws9  output DP-7 DP-4 eDP-1
-workspace $ws10 output DP-7 DP-4 eDP-1
-
-
-# Assign windows to specific workspace
-# assign [app_id="firefox"] $ws1
-# assign [app_id="$term"] $ws2
-# assign [class="jetbrains-clion"] $ws4
-# assign [app_id="subl"] $ws5
-# assign [class="teams-for-linux"] $ws7
-# assign [class="Signal"] $ws7
-# assign [app_id="glade"] $ws5
-# assign [class="VirtualBox Manager"] $ws5
-# for_window [class="VirtualBox Machine"] move to workspace $ws6
-# assign [app_id="thunderbird"] $ws8
-# for_window [class="Spotify"] move to workspace $ws9
-#
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod

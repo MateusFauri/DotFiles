@@ -138,14 +138,15 @@ window#waybar.hidden {
 }
 #clock {
 	margin-top: 3px;
-	margin-left: 3px;
-	padding-left: 5px;
-	padding-right: 5px;
+	margin-left: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 	margin-bottom: 0px;
 	border-radius: 10px;
 	transition: none;
 	color: #161320;
 	background: #ABE9B3;
+	font-size: 15px;
 	/*background: #1A1826;*/
 }
 

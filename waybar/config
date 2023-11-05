@@ -1,28 +1,35 @@
 {
 	"layer": "top",
-	"modules-left": ["custom/launcher","cpu","memory","tray","custo/media"],
-	"modules-center": ["river/tags", "sway/workspaces"],
-	"modules-right": ["custom/updates","clock","pulseaudio", "battery","network","custom/power"],
+	//"modules-left": ["custom/launcher","cpu","memory","tray","custo/media"],
+	//"modules-center": ["river/tags", "sway/workspaces"],
+	//"modules-right": ["custom/updates","clock","pulseaudio", "battery","network","custom/power"],
 	
-	"pulseaudio": {
+	"modules-left": ["custom/launcher","sway/workspaces","tray","custo/media"],
+	"modules-center": ["clock"],
+	"modules-right": ["custom/updates","cpu","memory", "pulseaudio", "battery","network","custom/power"],
+    
+    "pulseaudio": {
         "tooltip-format": "{icon} {desc} // {volume}%",
         "format-muted":"",
-		"scroll-step": 5,
-		"format": "{icon} {volume}%",
-		"format-muted": "{icon} {volume}%",
-		//"on-click":"pactl set-sink-mute @DEFAULT_SINK@ toggle",
+	    "scroll-step": 5,
+	    "format": "{icon} {volume}%",
+	    "format-muted": "{icon} {volume}%",
+	    "format-bluetooth": " {icon} {volume}% ",
+        "format-bluetooth-muted": " {icon} {volume}%",
         "on-click": "pavucontrol -t 3",
-		"format-icons": {
-            "default": ["", "", "󰕾", "󰕾", "󰕾", "", "", ""]
+	    "format-icons": {
+            "default": ["", "", "󰕾", "󰕾", "󰕾", " ", " ", " "]
 		}
 	},
 
     "river/tags": {
 		"num-tags": 6
     },
+
     "sway/workspaces": {
 		"disable-scroll": true,
-		"format": "{name}"
+		"format": "{name}",
+		"all-outputs": true
 	},
 
      "network": {
@@ -58,9 +65,17 @@
 		"icon-size":18,
 		"spacing": 10
 	},
+
+    //"clock": {
+    //   "format": "{: %I:%M %p %d/%m/%Y}"
+    //},
+
     "clock": {
-        "format": "{: %I:%M %p %d/%m/%Y}"
+        "timezone": "America/São-Paulo",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{: %I:%M %p - %d %b %A}"
     },
+
     "cpu": {
         "interval": 15,
         "format": " {}%",
@@ -98,9 +113,6 @@
         "exec": "checkupdates | wc -l",
         "exec-if": "[[ $(checkupdates | wc -l) != 0 ]]",
         "interval": 15,
-    },
-    "custom/wallpaper":{
-        "format":" ",
-        "on-click": "bash ~/.config/system_scripts/pkill_bc"
     }
+
 }

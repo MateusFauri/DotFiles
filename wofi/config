@@ -1,6 +1,12 @@
-width=640
-height=360
+width=30%
 mode=drun
+filter_rate=100
+insensitive=true
+term=kitty
 allow_images=true
-image_size=16
-prompt=Search
+allow_markup=true
+dmenu-parse_action=true
+drun-display_generic=true
+no_actions=true
+orientation=vertical
+content_halign=fill

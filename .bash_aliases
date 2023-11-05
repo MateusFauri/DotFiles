@@ -2,6 +2,7 @@
 alias aliasconf='nvim ~/.bash_aliases'
 
 ### Comandos
+alias iniciar=" sudo dnf update -y && sudo dnf autoremove -y"
 alias ips='ip -c -br a'
 alias gh='history|grep'
 alias lsl='ls -la'

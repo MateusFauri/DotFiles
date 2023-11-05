@@ -24,14 +24,14 @@ alias grep='grep --color=auto'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/Fauri/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('~/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/Fauri/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/Fauri/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "~/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "~/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/Fauri/anaconda3/bin:$PATH"
+        export PATH="~/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -44,8 +44,9 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 
-
-
-
+export GTK_THEME='Nordic'
+export GTK_THEME='McMojave-circle-dark'
+export GTK_THEME='Material Cursors'
 export QT_QPA_PLATFORMTHEME=qt5ct
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
