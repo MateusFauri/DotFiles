@@ -1,0 +1,24 @@
+[CompactMode]
+IconSize=64
+
+[DetailsMode]
+IconSize=48
+
+[General]
+ShowToolTips=true
+Version=202
+ViewPropsTimestamp=2024,2,13,14,23,22.419
+
+[IconsMode]
+IconSize=64
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[MainWindow]
+MenuBar=Disabled
+ToolBarsMovable=Disabled
+
+[PreviewSettings]
+Plugins=appimagethumbnail,audiothumbnail,comicbookthumbnail,djvuthumbnail,ebookthumbnail,directorythumbnail,imagethumbnail,jpegthumbnail,svgthumbnail,textthumbnail
